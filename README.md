@@ -1,4 +1,4 @@
-#Prototipo de un Blog
+# Prototipo de un Blog
 
 Prototipo de un blog, diseñado para el levantamiento de la página web y la base de datos.
 
