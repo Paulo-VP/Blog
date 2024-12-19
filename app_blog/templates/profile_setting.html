@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+    <img src="{{ url_for('static', filename='uploads/profile_image/' + profile_image) }}" alt="Foto de profile">
+    <form method="POST" enctype=multipart/form-data>
+        <input type="file" name="profile_image" accept="image/*">
+        <br>
+        <button type="submit" name="action" value="profile_image">Guardar Cambios</button>
+    </form>
+    <form method="POST">
+        <label for="first_name">Nombre</label>
+        <input type="text" name="first_name">
+        <br>
+        <label for="last_name">Apellido</label>
+        <input type="text" name="last_name">
+        <br>
+        <button type="submit" name="action" value="name">Guardar Cambios</button>
+    </form>
+    <form method="POST">
+        <label for="correo">Correo</label>
+        <input type="email" name="correo">
+        <br>
+        <button type="submit" name="action" value="correo">Guardar Cambios</button>
+    </form>
+    <form method="POST">
+        <label for="old_password">Contraseña actual</label>
+        <input type="password" name="old_password">
+        <br>
+        <label for="new_password">Nueva contraseña</label>
+        <input type="password" name="new_password">
+        <br>
+        <label for="new_password2">Repita nueva contraseña</label>
+        <input type="password" name="new_password2">
+        <br>
+        <button type="submit" name="action" value="password">Guardar Cambios</button>
+    </form>
+
+    <a href="/profile">cancelar</a>
+{% endblock %}

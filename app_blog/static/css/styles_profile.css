@@ -1,0 +1,32 @@
+.profile-image {
+    transition: all 0.5s ease;
+}
+
+.div-background {
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+.div-info {
+    height: 250px;
+    width: 100%;
+    transform: translateX(-125px);
+    transition: transform 0.5s ease;
+}
+
+.tarjeta {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.404) 0%, rgba(0, 0, 0, 0.103) 100%);
+    padding-left: 150px;
+    width: 150px;
+    height: 100%;
+    visibility: hidden;
+}
+
+.arrow-info {
+    transform-style: preserve-3d;
+    transform-origin: center;
+}
+
+.button-nav-active {
+    background: linear-gradient(to top, rgba(118, 214, 243, 0.521) 0%, rgba(118, 214, 243, 0) 20%);
+}

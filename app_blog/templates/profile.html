@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Perfil{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/styles_profile.css">
+<div class="container">
+    <div class="div-background row g-0" style="background-image: url('/static/images/background_profile.jpg');">
+        <div class="col-7 d-flex flex-column justify-content-end align-items-end">
+            <div id="div-image" class="profile-image d-flex flex-column justify-content-center align-items-center">
+                <img class="rounded-circle mb-4" width="250" height="250"
+                    src="{{ url_for('static', filename='uploads/profile_image/' + profile_image) }}" alt="">
+                <h3 id="name" class="text-name text-white">{{first_name}} {{last_name}}</h3>
+            </div>
+        </div>
+        <div class="col-5 d-flex align-items-start">
+            <div id="div-info" class="div-info d-flex">
+                <div id="box-info" class="tarjeta text-white">
+                    <p>Usuario: {{first_name}} {{last_name}}</p>
+                    <p>Correo: {{correo}}</p>
+                </div>
+                <button id="arrow-info" class="arrow-info btn p-2 border-0 border-0 bg-transparent"
+                    onclick="showInformation()">
+                    <i class="bi bi-arrow-bar-right fs-1 text-white"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div>
+        <ul class="nav nav-tabs mt-4">
+            <div class="btn-group">
+                <li class="nav-item button-nav-active">
+                    <button type="button" class="btn">Todos</button>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="btn">Más vistos</button>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="btn">Mas estrellas</button>
+                </li>
+                <li class="nav-item dropdown">
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tags</button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                        <a class="dropdown-item" href="#">Separated link</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="btn">Buscar</button>
+                </li>
+
+            </div>
+        </ul>
+    </div>
+</div>
+<script src="/static/js/script_perfil.js"></script>
+{% endblock %}
