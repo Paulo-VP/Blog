@@ -14,9 +14,11 @@
     transition: transform 0.5s ease;
 }
 
-.tarjeta {
+.card-custom {
     background: linear-gradient(to right, rgba(0, 0, 0, 0.404) 0%, rgba(0, 0, 0, 0.103) 100%);
     padding-left: 150px;
+    padding-top: 10px;
+    overflow-x: hidden;
     width: 150px;
     height: 100%;
     visibility: hidden;
@@ -29,4 +31,8 @@
 
 .button-nav-active {
     background: linear-gradient(to top, rgba(118, 214, 243, 0.521) 0%, rgba(118, 214, 243, 0) 20%);
+}
+
+.test{
+    white-space: nowrap
 }

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Estilos generales */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 300px;
+            transition: all 0.5s ease;
+        }
+
+        /* Imagen de perfil */
+        .profile-pic {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #007bff;
+            background-image: url('https://via.placeholder.com/100');
+            /* Imagen temporal */
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+
+        /* Flecha inicial */
+        .arrow-right,
+        .arrow-left {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .arrow-right {
+            right: -30px;
+        }
+
+        .arrow-left {
+            left: -30px;
+        }
+
+        /* Información oculta */
+        .info-box {
+            display: none;
+            position: absolute;
+            left: 100px;
+            width: 200px;
+            height: 100px;
+            background-color: #fff;
+            border: 1px solid #007bff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            transition: opacity 0.5s ease;
+        }
+
+        .user-name {
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Foto de perfil -->
+        <div class="profile-pic" id="profile"></div>
+        <!-- Flecha apuntando a la derecha -->
+        <div class="arrow-right" id="arrowRight">&#9654;</div>
+        <!-- Información adicional -->
+        <div class="info-box" id="infoBox">
+            <p>Información del usuario</p>
+        </div>
+        <!-- Flecha apuntando a la izquierda -->
+        <div class="arrow-left" id="arrowLeft" style="display: none;">&#9664;</div>
+    </div>
+    <div class="user-name" id="userName">Nombre del Usuario</div>
+
+    <!-- Bootstrap JS y dependencias -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Elementos DOM
+        const profile = document.getElementById('profile');
+        const arrowRight = document.getElementById('arrowRight');
+        const arrowLeft = document.getElementById('arrowLeft');
+        const infoBox = document.getElementById('infoBox');
+        const userName = document.getElementById('userName');
+
+        // Evento para mover a la izquierda y mostrar cuadro de información
+        arrowRight.addEventListener('click', () => {
+            profile.style.transform = 'translateX(-100px)';
+            infoBox.style.display = 'block';
+            arrowRight.style.display = 'none';
+            arrowLeft.style.display = 'block';
+            userName.style.display = 'none';
+        });
+
+        // Evento para volver al estado original
+        arrowLeft.addEventListener('click', () => {
+            profile.style.transform = 'translateX(0)';
+            infoBox.style.display = 'none';
+            arrowRight.style.display = 'block';
+            arrowLeft.style.display = 'none';
+            userName.style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>

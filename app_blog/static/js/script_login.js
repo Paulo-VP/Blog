@@ -13,3 +13,4 @@ function showLogin() {
     document.getElementById('forgotPasswordSection').classList.add('hidden');
     document.getElementById('loginSection').classList.remove('hidden');
 }
+

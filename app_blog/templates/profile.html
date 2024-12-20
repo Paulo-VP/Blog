@@ -13,9 +13,9 @@
         </div>
         <div class="col-5 d-flex align-items-start">
             <div id="div-info" class="div-info d-flex">
-                <div id="box-info" class="tarjeta text-white">
-                    <p>Usuario: {{first_name}} {{last_name}}</p>
-                    <p>Correo: {{correo}}</p>
+                <div id="box-info" class="card-custom text-white">
+                    <p class="test">Usuario: {{first_name}} {{last_name}}</p>
+                    <p class="test">Correo: {{correo}}</p>
                 </div>
                 <button id="arrow-info" class="arrow-info btn p-2 border-0 border-0 bg-transparent"
                     onclick="showInformation()">
@@ -25,32 +25,29 @@
         </div>
     </div>
     <div>
-        <ul class="nav nav-tabs mt-4">
-            <div class="btn-group">
-                <li class="nav-item button-nav-active">
-                    <button type="button" class="btn">Todos</button>
-                </li>
-                <li class="nav-item">
-                    <button type="button" class="btn">Más vistos</button>
-                </li>
-                <li class="nav-item">
-                    <button type="button" class="btn">Mas estrellas</button>
-                </li>
-                <li class="nav-item dropdown">
-                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tags</button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                        <a class="dropdown-item" href="#">Separated link</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <button type="button" class="btn">Buscar</button>
-                </li>
-
+        <nav class="navbar navbar-expand-lg">
+            <div class="collapse navbar-collapse nav-tabs" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button type="button" class="nav-link">Todos</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="nav-link">Más vistos</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="nav-link">Más estrellas</button>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <button type="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Tags</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item">Action</a></li>
+                            <li><a class="dropdown-item">Another action</a></li>
+                            <li><a class="dropdown-item">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-        </ul>
+        </nav>
     </div>
 </div>
 <script src="/static/js/script_perfil.js"></script>

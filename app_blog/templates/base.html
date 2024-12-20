@@ -6,14 +6,12 @@
     <title>{% block title %}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/fondo.png">
-
 </head>
 <body>
     <header class="bg-light shadow-sm">
         <div class="container">
             <div class="row align-items-center py-2">
-                <div class=" col-auto">
+                <div class="col-auto">
                     <a href="/">
                         <img src="/static/images/logo.png" alt="Logo" width="50" height="50" class="img-fluid rounded-circle">
                     </a>
@@ -23,9 +21,9 @@
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Buscar...">
                             <select class="form-select" style="max-width: 120px;" aria-label="Filtro de búsqueda">
-                                <option selected value="todo">Todo</option>
-                                <option value="nombre">Nombre</option>
-                                <option value="autor">Autor</option>
+                                <option selected value="all">Todo</option>
+                                <option value="name">Nombre</option>
+                                <option value="author">Autor</option>
                                 <option value="tag">Tag</option>
                             </select>
                             <button class="btn btn-primary" type="button">
@@ -41,6 +39,7 @@
                             <img src="/static/uploads/profile_image/{{ profile_image }}" width="40" height="40" class="rounded-circle">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                            <li><a class="dropdown-item" href="/post/create"><i class="bi bi-file-earmark-post me-2"></i>Crear post</a></li>
                             <li><a class="dropdown-item" href="/profile/setting"><i class="bi bi-gear me-2"></i>Configuración</a></li>
                             <li><a class="dropdown-item" href="/profile"><i class="bi bi-person me-2"></i>Perfil</a></li>
                             <li><hr class="dropdown-divider"></li>

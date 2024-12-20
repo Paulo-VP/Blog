@@ -22,10 +22,6 @@ s_password=URLSafeSerializer('abcdefg',salt="password")
 def load_user(user_id): 
     return Users.query.get(int(user_id))
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return redirect(url_for('login'))
-
 @app.route("/create", methods=['GET', 'POST'])
 def create():
     token = Tokens_create_account.get(request.args.get("token"))
@@ -143,6 +139,11 @@ def profile_setting():
 @login_required
 def post():
     return render_template("post.html")
+
+
+@app.route('/prueba')
+def prueba():
+    return render_template("prueba.html")
 
 @app.route('/logout')
 @login_required
