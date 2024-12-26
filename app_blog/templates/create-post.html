@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block styles %}
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <link href="/static/css/styles_write_post.css" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+    <div class="container my-5">
+        <label for="background-color" class="btn border-0 bg-secondary float-right rounded-0 rounded-top">Color fondo</label>
+        <input type="color" id="background-color" class="hidden-input" value="#ffffff">
+        <label for="font-color" class="btn border-0 bg-secondary float-right rounded-0 rounded-top">Color letra</label>
+        <input type="color" id="font-color" class="hidden-input" value="#000000">
+        <div id="card-title" class="card mb-5 rounded-0 rounded-bottom">
+            <div class="card-body d-flex">
+                <textarea id="dynamic-input" class="bg-transparent border-0 text-center title-textarea" type="text" placeholder="*Ingrese titulo*" rows="1" maxlength="80"></textarea>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex align-items-center justify-content-center">
+                    <img class="rounded-circle" width="50" height="50" src="{{ url_for('static', filename='uploads/profile_image/' + profile_image) }}" alt="">
+                    <div class="ms-2">
+                        <p id="name-card" class="text-name mb-0">{{first_name}} {{last_name}}</p>
+                        <p id="date-card" class="card-text">Date</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-2" id="editor">
+        </div>
+        <div class="d-flex justify-content-between px-2">
+            <a href="/" class="btn btn-danger">Cancelar</a> 
+            <button id="save-post" type="button" class="btn btn-success float-right">Crear</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script src="/static/js/script_write_post.js"></script>
+{% endblock %}

@@ -1,6 +1,7 @@
 import os
 
 EV_SECRET_KEY = os.getenv('SECRET_KEY')  
+EV_SECRET_KEY_SERIALIZER =  os.getenv('SECRET_KEY_SERIALIZER')  
 DB_HOST = os.getenv('DB_HOST') 
 DB_USER = os.getenv('MYSQL_USER')
 DB_PASSWORD = os.getenv('MYSQL_PASSWORD')  

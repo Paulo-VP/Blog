@@ -13,7 +13,7 @@
 <body>
     <div class="card p-4 custom-card">
         <h3 class="text-center mb-4">Informacion del usuario</h3>
-        <form method="POST">
+        <form id="recoveryForm">
             <label for="password" class="form-label fw-bold">Nueva contraseña</label>
             <div class="input-group mb-2">
                 <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required>
@@ -24,9 +24,9 @@
             <ul id="validations" class="mb-4">
                 <li id="length" style="color: red;">Debe tener al menos 8 caracteres</li>
                 <li id="capital" style="color: red;">Debe incluir al menos una letra mayúscula</li>
-                <li id="lower" style="color: red;">Debe incluir al menos un número</li>
+                <li id="lower" style="color: red;">Debe incluir al menos una letra minuscula</li>
                 <li id="number" style="color: red;">Debe incluir al menos un número</li>
-                <li id="symbol" style="color: red;">Debe incluir al menos un número</li>
+                <li id="symbol" style="color: red;">Debe incluir al menos un simbolo</li>
             </ul>
             <label for="password2" class="form-label fw-bold">Repita la contraseña</label>
             <div class="input-group mb-2">
@@ -43,6 +43,7 @@
     </div>
     <script src="/static/js/script_see_password.js"></script>
     <script src="/static/js/script_set_password.js"></script>
+    <script src="/static/js/script_recovery_password.js"></script>
 </body>
 
 </html>

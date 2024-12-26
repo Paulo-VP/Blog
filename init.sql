@@ -1,7 +1,6 @@
 USE Prueba;
 CREATE TABLE users (
     id INT AUTO_INCREMENT,
-    -- nickname VARCHAR(20) NOT NULL UNIQUE,
     profile_image VARCHAR(255) NOT NULL,
     first_name VARCHAR(20) NOT NULL,
     last_name VARCHAR(20) NOT NULL,
@@ -10,13 +9,15 @@ CREATE TABLE users (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE blog_post (
+CREATE TABLE post (
     id INT AUTO_INCREMENT,
-    title VARCHAR(255) NOT NULL,
-    slug VARCHAR(255) UNIQUE NOT NULL,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    title VARCHAR(80) NOT NULL,
+    text_color VARCHAR(18) NOT NULL,
+    card_color VARCHAR(18) NOT NULL,
+    slug VARCHAR(255) NOT NULL UNIQUE,
+    content TEXT,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
     users_id INTEGER NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (users_id) REFERENCES users(id)
@@ -28,7 +29,6 @@ CREATE TABLE tokens_create_account(
     token VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL,
     expires_at TIMESTAMP NOT NULL,
-    used BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id)
 );
 

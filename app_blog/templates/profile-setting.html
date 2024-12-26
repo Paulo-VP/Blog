@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% block title %}Settings{% endblock %}
 {% block content %}
     <img src="{{ url_for('static', filename='uploads/profile_image/' + profile_image) }}" alt="Foto de profile">
     <form method="POST" enctype=multipart/form-data>
@@ -34,6 +33,5 @@
         <br>
         <button type="submit" name="action" value="password">Guardar Cambios</button>
     </form>
-
     <a href="/profile">cancelar</a>
 {% endblock %}

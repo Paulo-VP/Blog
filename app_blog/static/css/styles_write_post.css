@@ -1,0 +1,13 @@
+.hidden-input{
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.title-textarea{
+    font-size: 50px; 
+    width: 100%; 
+    resize: none; 
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+}
