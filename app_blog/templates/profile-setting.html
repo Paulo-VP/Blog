@@ -1,37 +1,110 @@
 {% extends "base.html" %}
+{% block styles %}
+    <link rel="stylesheet" href="/static/css/styles_setting_profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.css"
+        integrity="sha512-087vysR/jM0N5cp13Vlp+ZF9wx6tKbvJLwPO8Iit6J7R+n7uIMMjg37dEgexOshDmDITHYY5useeSmfD1MYiQA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+{% endblock %}
 {% block content %}
-    <img src="{{ url_for('static', filename='uploads/profile_image/' + profile_image) }}" alt="Foto de profile">
-    <form method="POST" enctype=multipart/form-data>
-        <input type="file" name="profile_image" accept="image/*">
-        <br>
-        <button type="submit" name="action" value="profile_image">Guardar Cambios</button>
-    </form>
-    <form method="POST">
-        <label for="first_name">Nombre</label>
-        <input type="text" name="first_name">
-        <br>
-        <label for="last_name">Apellido</label>
-        <input type="text" name="last_name">
-        <br>
-        <button type="submit" name="action" value="name">Guardar Cambios</button>
-    </form>
-    <form method="POST">
-        <label for="correo">Correo</label>
-        <input type="email" name="correo">
-        <br>
-        <button type="submit" name="action" value="correo">Guardar Cambios</button>
-    </form>
-    <form method="POST">
-        <label for="old_password">Contraseña actual</label>
-        <input type="password" name="old_password">
-        <br>
-        <label for="new_password">Nueva contraseña</label>
-        <input type="password" name="new_password">
-        <br>
-        <label for="new_password2">Repita nueva contraseña</label>
-        <input type="password" name="new_password2">
-        <br>
-        <button type="submit" name="action" value="password">Guardar Cambios</button>
-    </form>
-    <a href="/profile">cancelar</a>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-3 d-flex align-items-start justify-content-center">
+                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                    <button type="button" class="btn btn-outline-primary" onclick="showImage()">Cambiar foto de portada</button>
+                    <button type="button" class="btn btn-outline-primary" onclick="showUserData()">Cambair datos de usuario</button>
+                    <button type="button" class="btn btn-outline-primary" onclick="showMail()">Cambiar Contraseña</button>
+                    <button type="button" class="btn btn-outline-primary" onclick="showPassword()">Cambiar Contraseña</button>
+                    <button type="button" class="btn btn-outline-danger" onclick="showDelete()">Eliminar Cuenta</button>
+                </div>
+            </div>
+            <div class="col-9">
+                <div id="imageSection" style="display: none;">
+                    <form action="">
+                        <div class="d-flex justify-content-center" style="background-image: url('/static/images/background_profile.jpg');">
+                            <img id="profile_image" src="{{ url_for('static', filename='uploads/profile_image/' + profile_image) }}"
+                                class="rounded-circle mb-4" width="400" height="400">
+                        </div>
+                        <label for="input_file" class="btn bg-secondary rounded-0 rounded-bottom">Cambiar imagen de perfil</label>
+                        <input id="input_file" type="file" style="visibility:hidden;" accept="image/*">
+                        <div class="container-cropper mb-0">
+                            <img id="image" src="">
+                        </div>
+                        <div class="container-cropper mt-0">
+                            <button type="button" id="crop_button" class="btn btn-info rounded-0 rounded-bottom" style="display: none; width: 100%;">Cortar imagen</button>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-2">Conservar cambios</button>
+                    </form>
+                </div>
+                <div id="nameSection" style="display: none;">
+                    <form action="">
+                        <label for="first_name" class="form-label">Nombre</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="{{first_name}}">
+                        <label for="last_name" class="form-label">Apellido</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" placeholder="{{last_name}}">
+                        <button type="submit" class="btn btn-success mt-2">Guardar Cambios</button>
+                    </form>
+                </div>
+                <div id="mailSection" style="display: none;">
+                    <label for="correo" class="form-label">Correo</label>
+                    <input type="email" id="correo" name="correo" class="form-control" placeholder="{{correo}}">
+                    <button type="submit" class="btn btn-success mt-2" name="action" value="correo">Guardar Cambios</button>
+                </div>
+                <div id="passwordSection" style="display: none;">
+                    <form>
+                        <label for="old_password" class="form-label">Contraseña actual</label>
+                        <div class="input-group mb-2">
+                            <input type="password" id="old_password" name="old_password" class="form-control" placeholder="Contraseña" required>
+                            <button type="button" class="btn bg-secondary" onclick="seePassword(old_password)">
+                                <i id="old_password_icon" class="bi bi-eye-slash text-white"></i>
+                            </button>
+                        </div>
+                        <label for="password" class="form-label">Nueva contraseña</label>
+                        <div class="input-group mb-2">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required>
+                            <button type="button" class="btn bg-secondary" onclick="seePassword(password)">
+                                <i id="password_icon" class="bi bi-eye-slash text-white"></i>
+                            </button>
+                        </div>
+                        <ul id="validations" class="mb-4">
+                            <li id="length" style="color: red;">Debe tener al menos 8 caracteres</li>
+                            <li id="capital" style="color: red;">Debe incluir al menos una letra mayúscula</li>
+                            <li id="lower" style="color: red;">Debe incluir al menos una letra minuscula</li>
+                            <li id="number" style="color: red;">Debe incluir al menos un número</li>
+                            <li id="symbol" style="color: red;">Debe incluir al menos un simbolo</li>
+                        </ul>
+                        <label for="password2" class="form-label">Repita nueva contraseña</label>
+                        <div class="input-group mb-2">
+                            <input type="password" id="password2" name="password2" class="form-control" placeholder="Contraseña" required>
+                            <button type="button" class="btn bg-secondary" onclick="seePassword(password2)">
+                                <i id="password2_icon" class="bi bi-eye-slash text-white"></i>
+                            </button>
+                        </div>
+                        <ul id="validation_equality" class="mb-4">
+                            <li id="equals" style="color: red;">Las contraseñas deben ser iguales</li>
+                        </ul>
+                        <button type="submit" class="btn btn-success mt-2">Guardar Cambios</button>
+                    </form>
+                </div>
+                <div id="deleteSection" style="display: none;">
+                    <h1 class="mb-4">Esta opcion eliminara todos los datos relacionados a esta cuenta y seran imposible volver a recuperar</h1>
+                    <label for="password_delete" class="form-label">Se requiere la contraseña para la eliminacion de la cuenta</label>
+                    <div class="input-group mb-2">
+                        <input type="password" id="password_delete" name="password_delete" class="form-control" placeholder="Contraseña" required>
+                        <button type="button" class="btn bg-secondary" onclick="seePassword(password_delete)">
+                            <i id="password_delete_icon" class="bi bi-eye-slash text-white"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="btn btn-danger mt-2">Eliminar cuenta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/script_profile_setting.js"></script>
+    <script src="/static/js/script_see_password.js"></script>
+    <script src="/static/js/script_set_password.js"></script>
+    <script src="/static/js/script_crop_image.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.js"
+            integrity="sha512-lR8d1BXfYQuiqoM/LeGFVtxFyspzWFTZNyYIiE5O2CcAGtTCRRUMLloxATRuLz8EmR2fYqdXYlrGh+D6TVGp3g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 {% endblock %}

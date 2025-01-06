@@ -1,0 +1,12 @@
+.title-textarea {
+    font-size: 50px;
+    width: 100%;
+}
+
+.comment-textarea {
+    font-size: 15px;
+    width: 100%;
+    resize: none;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+}

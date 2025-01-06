@@ -1,28 +1,61 @@
 {% extends "base.html" %}
 {% block styles %}
+    <link href="/static/css/read_post.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
-    <link href="/static/css/styles_write_post.css" rel="stylesheet" />
 {% endblock %}
 {% block content %}
     <div class="container my-5">
-        <div id="card-title" class="card mb-5 rounded-0 rounded-bottom">
+        <div id="card-title" class="card mb-5 rounded-0 rounded-bottom" style="color: {{slug.text_color}}; background-color:{{slug.card_color}};">
             <div class="card-body d-flex">
-                <h1 class="bg-transparent border-0 text-center title-textarea">{{title}}</h1>
+                <h1 class="bg-transparent border-0 text-center title-textarea">{{slug.title}}</h1>
             </div>
             <div class="card-footer">
                 <div class="d-flex align-items-center justify-content-center">
                     <img class="rounded-circle" width="50" height="50"
-                        src="{{ url_for('static', filename='uploads/profile_image/' + profile_image) }}" alt="">
+                        src="/static/uploads/profile_image/{{info_users.profile_image}}" alt="">
                     <div class="ms-2">
-                        <p id="name-card" class="text-name mb-0">{{first_name}} {{last_name}}</p>
-                        <p id="date-card" class="card-text">{{date}}</p>
+                        <p id="name-card" class="text-name mb-0">{{info_users.first_name}} {{info_users.last_name}}</p>
+                        <p id="date-card" class="card-text">{{slug.updated_at}}</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="mb-2">
-            <p>asd</p>  
+        <div class="mb-2 ql-editor">
+            {{ slug.content|safe }}
+        </div>
+        <div class="mb-4">
+            <h4 class="border-top pt-3">Deja un comentario</h4>
+            <form id="semd_comment">
+                <textarea name="comment" class="comment-textarea" rows="2" maxlength="300"></textarea>
+                <button type="submit">Enviar comentario</button>
+                <button id="is_public" type="button">
+                    <i id="icon_type_comment" class="bi bi-globe-americas"></i>
+                    <label id="label_icono_comment" for="icon_type_comment">Comentario publico</label>
+                </button>
+            </form>
+        </div>
+        <div id="commentsSection">
+            {% for comment in comments %}
+                <div class="card mb-4">
+                    <div class="row g-0">
+                        <div class="col-1 d-flex align-items-center justify-content-center">
+                            <img src="/static/uploads/profile_image/{{comment.profile_image}}" width="50" height="50" class="img-fluid">
+                        </div>
+                        <div class="col-11">
+                            <div class="card-body">
+                                <p class="card-text mb-0">{{comment.first_name}} {{comment.last_name}}</p>
+                                <p class="card-text"><small class="text-body-secondary">{{comment.created_at}}</small></p>
+                            </div>
+                        </div>
+                        <div class="col-12 card-body pt-0">
+                            <p class="card-text">{{comment.content}}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
+    <script src="/static/js/script_send_comment.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 {% endblock %}
+

@@ -1,10 +1,10 @@
 from db import db
-from sqlalchemy.orm import Mapped, mapped_column,relationship
-from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
 from flask_bcrypt import Bcrypt
 from flask_login import UserMixin
 from typing import List
 from datetime import datetime, timedelta
+import enum
 
 bcrypt=Bcrypt()
 
@@ -38,7 +38,7 @@ class Users(db.Model,UserMixin):
     @classmethod
     def create(cls,first_name,last_name,correo,password):
         new_user=cls(
-            profile_image="default.jpg",
+            profile_image="default.png",
             first_name=first_name,
             last_name=last_name,
             correo=correo,
@@ -69,6 +69,11 @@ class Users(db.Model,UserMixin):
         self.password=bcrypt.generate_password_hash(password).decode('utf-8')
         db.session.commit()
         return True
+    
+    @classmethod
+    def getPublicInfoById(cls,id):
+        public_info=db.session.execute(db.select(cls.first_name,cls.last_name,cls.correo,cls.profile_image).where(cls.id == id)).mappings().fetchone()
+        return public_info
         
 class Tokens_create_account(db.Model):
     __tablename__='tokens_create_account' 
@@ -147,6 +152,11 @@ class Tokens_password(db.Model):
         db.session.delete(sefl)
         db.session.commit()
 
+class PostStatus(enum.Enum):
+    public = "public"
+    private = "private"
+    disabled = "disabled"
+
 class Post(db.Model):
     __tablename__='post' 
     id:Mapped[int]=mapped_column(primary_key=True, autoincrement=True)
@@ -157,13 +167,14 @@ class Post(db.Model):
     content:Mapped[str]=mapped_column(db.Text)
     created_at:Mapped[datetime]=mapped_column(nullable=False)
     updated_at:Mapped[datetime]=mapped_column(nullable=False)
+    status: Mapped[str] = mapped_column(db.Enum(PostStatus),nullable=False)
     users_id:Mapped[int]=mapped_column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     def __repr__(self):
-        return f"<Post id={self.id} title={self.title}>"
+        return f"<Post id={self.id} title={self.title} title={self.slug}>"
 
     @classmethod
-    def createPost(cls,title,text_color,card_color,slug,users_id):
+    def createPost(cls,title,text_color,card_color,slug,status,users_id):
         new_post=cls(
             title=title,
             text_color=text_color,
@@ -171,6 +182,7 @@ class Post(db.Model):
             slug=slug,
             created_at=datetime.utcnow().isoformat(),
             updated_at=datetime.utcnow().isoformat(),
+            status=PostStatus.public,
             users_id=users_id
         )
         try:
@@ -197,6 +209,70 @@ class Post(db.Model):
         else:
             return False
         
+    @classmethod
+    def getAll(cls):
+        posts_info=db.session.execute(db.select(cls.title,cls.text_color,cls.card_color,cls.slug,cls.updated_at,cls.users_id,Users.first_name,Users.last_name,Users.profile_image).join(Users,cls.users_id==Users.id)).mappings()
+        if(posts_info):
+            return posts_info
+        else:
+            return False
+    
+    @classmethod
+    def getAllById(cls,users_id):
+        posts_info=db.session.execute(db.select(cls.title,cls.text_color,cls.card_color,cls.slug,cls.updated_at,cls.users_id,Users.first_name,Users.last_name,Users.profile_image).join(Users,cls.users_id==Users.id).where(cls.users_id == users_id)).mappings()
+        if(posts_info):
+            return posts_info
+        else:
+            return False
+        
+    @classmethod
+    def getBySlug(cls,slug_request):
+        slug=db.session.execute(db.select(cls).where(cls.slug == slug_request)).scalar()
+        if(slug):
+            return slug
+        else:
+            return False
+        
+class Comments(db.Model):
+    __tablename__= 'comments'
+    id:Mapped[int]=mapped_column(primary_key=True, autoincrement=True)
+    content:Mapped[str]=mapped_column(db.String(300),nullable=False)
+    created_at:Mapped[datetime]=mapped_column(nullable=False)
+    is_public:Mapped[bool]=mapped_column(db.Boolean, nullable=False)
+    users_id:Mapped[int]=mapped_column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    post_id:Mapped[int]=mapped_column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    parent_comment_id:Mapped[int]=mapped_column(db.Integer, db.ForeignKey('comments.id'))
+
+    def __repr__(self):
+        return f"<Post id={self.id} content={self.content} post_id={self.post_id} create_at={self.created_at}>"
+
+    @classmethod
+    def add_comment(cls,content,is_public,users_id,post_id,parent_comment_id):
+        new_comment=cls(
+            content=content,
+            created_at=datetime.utcnow().isoformat(),
+            is_public=is_public,
+            users_id=users_id,
+            post_id=post_id,
+            parent_comment_id=parent_comment_id
+        )
+        try:
+            db.session.add(new_comment)
+        except:
+            db.session.rollback()
+            return False
+        finally:
+            db.session.commit()
+            return new_comment
+        
+    @classmethod
+    def get_comments_post(cls,post_id):
+        comments=db.session.execute(db.select(cls.content,cls.created_at,Users.first_name,Users.last_name,Users.profile_image).where(cls.post_id == post_id).join(Users,cls.users_id==Users.id)).mappings()
+        if(comments):
+            return comments
+        else:
+            return False
+
 """
 class Followers(db.Model):
     __tablename__='followers'

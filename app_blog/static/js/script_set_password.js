@@ -16,5 +16,5 @@ passwordInput.addEventListener('input', () => {
 password2Input.addEventListener('input', () => {
     const password = passwordInput.value;
     const password2 = password2Input.value;
-    document.getElementById('equals').style.color = password === password2 ? 'green' : 'red';
+    document.getElementById('equals').style.color = (password && password === password2) ? 'green' : 'red';
 });

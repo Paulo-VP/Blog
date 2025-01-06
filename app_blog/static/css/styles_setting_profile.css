@@ -1,0 +1,49 @@
+.card {
+    width: 100%;
+    max-width: 800px;
+}
+
+.input_hidden{
+    display: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+.container-cropper{
+    margin: 20px auto;
+    max-width: 640px;
+}   
+
+.cropper-container{
+    width: 100%;
+    height: auto;
+}
+
+.cropper-canvas{
+    width: 100%;
+    height: auto;
+}
+
+.cropper-view-box,
+.cropper-face {
+    border-radius: 50%;
+}
+
+.cropper-view-box {
+    outline: 0;
+    box-shadow: 0 0 0 1px #39f;
+}
+
+/* .cropper-container.cropper-bg{
+    display: inline-block !important;
+}
+
+.cropper-canva{
+    transform: none !important;
+} */
+
+/* .cropper-view-box{
+
+} */

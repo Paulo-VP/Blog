@@ -1,17 +1,17 @@
 function showCreateAccount() {
-    document.getElementById('loginSection').classList.add('hidden');
-    document.getElementById('createAccountSection').classList.remove('hidden');
+    document.getElementById('loginSection').style.display="none";
+    document.getElementById('createAccountSection').style.display="block";
 }
 
 function showForgotPassword() {
-    document.getElementById('loginSection').classList.add('hidden');
-    document.getElementById('forgotPasswordSection').classList.remove('hidden');
+    document.getElementById('loginSection').style.display="none";
+    document.getElementById('forgotPasswordSection').style.display="block";
 }
 
 function showLogin() {
-    document.getElementById('createAccountSection').classList.add('hidden');
-    document.getElementById('forgotPasswordSection').classList.add('hidden');
-    document.getElementById('loginSection').classList.remove('hidden');
+    document.getElementById('createAccountSection').style.display="none";
+    document.getElementById('forgotPasswordSection').style.display="none";
+    document.getElementById('loginSection').style.display="block";
 }
 
 document.getElementById('loginSection').addEventListener('submit', async (event) => {
@@ -26,7 +26,6 @@ document.getElementById('loginSection').addEventListener('submit', async (event)
         body: JSON.stringify(data)
     });
     const result = await response.json();
-    console.log(result);
     if (response.status === 400) {
         alert(result.message);
     } else {
@@ -46,7 +45,6 @@ document.getElementById('createAccountSection').addEventListener('submit', async
         body: JSON.stringify(data)
     });
     const result = await response.json();
-    console.log(result);
 });
 
 document.getElementById('forgotPasswordSection').addEventListener('submit', async (event) => {
@@ -61,5 +59,4 @@ document.getElementById('forgotPasswordSection').addEventListener('submit', asyn
         body: JSON.stringify(data)
     });
     const result = await response.json();
-    console.log(result);
 });

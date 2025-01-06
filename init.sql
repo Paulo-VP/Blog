@@ -18,9 +18,10 @@ CREATE TABLE post (
     content TEXT,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
+    status ENUM('public', 'private', 'disabled') NOT NULL,
     users_id INTEGER NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (users_id) REFERENCES users(id)
+    FOREIGN KEY (users_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE tokens_create_account(
@@ -39,6 +40,19 @@ CREATE TABLE tokens_password(
     created_at TIMESTAMP NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_correo) REFERENCES users(correo)
+    FOREIGN KEY (user_correo) REFERENCES users(correo) ON DELETE CASCADE
 );
 
+CREATE TABLE comments(
+    id INT AUTO_INCREMENT,
+    content VARCHAR(300) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    is_public BOOLEAN NOT NULL,
+    users_id INT NOT NULL,
+    post_id INT NOT NULL,
+    parent_comment_id INT DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (users_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES post(id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_comment_id) REFERENCES comments(id) ON DELETE CASCADE
+);

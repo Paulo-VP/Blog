@@ -1,0 +1,28 @@
+<div class="card py-3 px-5 mb-4" style="color:{{post_info.text_color}}; background:{{post_info.card_color}}">
+    <div class="row g-0">
+        <div class="col-2 d-flex align-items-center justify-content-center">
+            <div width="150" height="150">
+                <a href="/profile?id={{post_info.users_id}}" class="col-6">
+                    <img src="/static/uploads/profile_image/{{post_info.profile_image}}" class="rounded-circle" width="150" height="150">
+                </a>
+            </div>
+        </div>
+        <div class="card-body col-10">
+            <div class="row">
+                <a href="/profile?id={{post_info.users_id}}" class="col-6" style="color:{{post_info.text_color}};text-decoration: none;">
+                    <h3>{{post_info.first_name}} {{post_info.last_name}}</h3>
+                </a>
+                <div class="col-6 text-end">
+                    <i class="bi bi-eye-fill"> 0 </i>
+                    <i class="bi bi-stars"> 0 </i>
+                </div>
+                <h1 class="col-12">{{post_info.title}}</h1>
+                <h6>{{post_info.updated_at}}</h6>
+                <h6 class="col-12">tags:</h6>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer bg-transparent p-0 text-center" style="border-color: rgba({{post_info.text_color[4:-1]}},0.5);">
+        <a class="m-0" href="/post?slug={{post_info.slug}}" style="color:{{post_info.text_color}};text-decoration: none;">Leer Post</a>
+    </div>
+</div>

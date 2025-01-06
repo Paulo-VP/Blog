@@ -8,15 +8,15 @@
             <div class="col-7 d-flex flex-column justify-content-end align-items-end">
                 <div id="div-image" class="profile-image d-flex flex-column justify-content-center align-items-center">
                     <img class="rounded-circle mb-4" width="250" height="250"
-                        src="{{ url_for('static', filename='uploads/profile_image/' + profile_image) }}" alt="">
-                    <h3 id="name" class="text-name text-white">{{first_name}} {{last_name}}</h3>
+                        src="{{ url_for('static', filename='uploads/profile_image/' + user_info_profile_image) }}" alt="">
+                    <h3 id="name" class="text-name text-white">{{user_info_first_name}} {{user_info_last_name}}</h3>
                 </div>
             </div>
             <div class="col-5 d-flex align-items-start">
                 <div id="div-info" class="div-info d-flex">
                     <div id="box-info" class="card-custom text-white">
-                        <p class="test">Usuario: {{first_name}} {{last_name}}</p>
-                        <p class="test">Correo: {{correo}}</p>
+                        <p class="test">Usuario: {{user_info_first_name}} {{user_info_last_name}}</p>
+                        <p class="test">Correo: {{user_info_correo}}</p>
                     </div>
                     <button id="arrow-info" class="arrow-info btn p-2 border-0 bg-transparent"
                         onclick="showInformation()">
@@ -50,6 +50,11 @@
                 </div>
             </nav>
         </div>
+    </div>
+    <div class="container mt-4">
+        {% for post_info in posts_info %}
+            {% include "base_card.html" %}
+        {% endfor %}
     </div>
     <script src="/static/js/script_perfil.js"></script>
 {% endblock %}

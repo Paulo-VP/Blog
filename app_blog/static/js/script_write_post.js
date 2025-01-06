@@ -61,7 +61,7 @@ document.getElementById('save-post').addEventListener('click', async() => {
         if (response.status === 400) {
             alert(result.message); 
         } else {
-            alert(result.message); 
+            window.location.href = "/";
         }
     }
 });

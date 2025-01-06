@@ -5,7 +5,7 @@ from slugify import slugify
 from bs4 import BeautifulSoup
 from config import Config
 from db import init_db
-from models import Users,Tokens_create_account,Tokens_password,Post
+from models import Users,Tokens_create_account,Tokens_password,Post, Comments
 import base64
 import uuid
 import os
@@ -27,6 +27,17 @@ s_password=URLSafeSerializer('abcdefg',salt="password")
 def load_user(user_id): 
     return Users.query.get(int(user_id))
 
+@app.context_processor
+def inject_user():
+    if not request.endpoint in ['login','create','recovery','logout']:
+        return dict(
+            id=current_user.id,
+            first_name=current_user.first_name,
+            last_name=current_user.last_name,
+            profile_image=current_user.profile_image
+        )
+    return {}
+
 @app.route("/create", methods=['GET', 'POST'])
 def create():
     token = Tokens_create_account.get(request.args.get("token"))
@@ -46,14 +57,10 @@ def create():
                             login_user(usuario)
                             token.delete()
                             return jsonify({'status':'success','message':'Cuenta creada'}), 200
-                        else:
-                            return jsonify({'status':'error','message':'Error en la creacion de cuenta'}), 400
-                    else:
-                        return jsonify({'status':'error','message':'Las contraseñas deben coincidir'}), 400
-                else:
-                    return jsonify({'status':'error','message':'La contraseña no cumple con los parametros'}), 400
-            else:
-                return jsonify({'status':'error','message': 'Faltan Campos'}), 400
+                        return jsonify({'status':'error','message':'Error en la creacion de cuenta'}), 400
+                    return jsonify({'status':'error','message':'Las contraseñas deben coincidir'}), 400
+                return jsonify({'status':'error','message':'La contraseña no cumple con los parametros'}), 400
+            return jsonify({'status':'error','message': 'Faltan Campos'}), 400
         if request.method=='GET':
             return render_template("create-account.html")
     return(redirect(url_for("login")))
@@ -70,8 +77,7 @@ def login():
             if(usuario):
                 login_user(usuario)
                 return jsonify({'status':'success','message':'Login'})
-            else:
-                return jsonify({'status':'error','message':'Credenciales erroneas'}), 400
+            return jsonify({'status':'error','message':'Credenciales erroneas'}), 400
         elif(data.get('action')=="recovery"):
             user = Users.get_by_correo(data.get("correo"))
             if(user):
@@ -103,76 +109,112 @@ def recovery_password():
                         token.delete()
                         usuario.update_password(password)
                         return jsonify({'status':'success','message':'Contraseña cambiada'}), 200
-                    else:
-                        return jsonify({'status':'error','message':'Error en el cambio de contraseña'}), 400
-                else:
-                    return jsonify({'status':'error','message':'Las contraseñas deben coincidir'}), 400
-            else:
-                return jsonify({'status':'error','message':'La contraseña no cumple con los parametros'}), 400
+                    return jsonify({'status':'error','message':'Error en el cambio de contraseña'}), 400
+                return jsonify({'status':'error','message':'Las contraseñas deben coincidir'}), 400
+            return jsonify({'status':'error','message':'La contraseña no cumple con los parametros'}), 400
         return render_template("recovery.html")
     return(redirect(url_for("login")))
 
 @app.route("/")
 @login_required
 def home():
-    return render_template("home.html", first_name=current_user.first_name, profile_image=current_user.profile_image)
+    posts_info=Post.getAll()
+    return render_template("home.html",posts_info=posts_info)
 
-@app.route("/profile")
+@app.route("/profile",methods=['GET'])
 @login_required
 def profile():
-    first_name=current_user.first_name
-    last_name=current_user.last_name
-    correo=current_user.correo
-    profile_image=current_user.profile_image
-    return render_template("profile.html",first_name=first_name,last_name=last_name,correo=correo,profile_image=profile_image)
+    id=request.args.get("id")
+    if(id):
+        user_info=Users.getPublicInfoById(id)
+        if(user_info):
+            user_info_first_name=user_info.first_name
+            user_info_last_name=user_info.last_name
+            user_info_correo=user_info.correo
+            user_info_profile_image=user_info.profile_image
+            posts_info=Post.getAllById(id)
+            return render_template("profile.html",user_info_first_name=user_info_first_name,user_info_last_name=user_info_last_name,user_info_correo=user_info_correo,user_info_profile_image=user_info_profile_image,posts_info=posts_info)
+    return redirect(url_for("home"))
 
 @app.route("/profile/setting", methods=['GET','POST'])
 def profile_setting():
     if(request.method=='POST'):
-        action=request.form.get("action")
-        if(action=="profile_image"):
-            profile_image=request.files['profile_image']
-            if profile_image:
-                filename = f"{uuid.uuid4().hex}.{profile_image.filename.rsplit('.', 1)[1].lower()}"
+        data = request.json
+        if(data.get("action")=="setImage"):
+            image_base64=data.get("image")
+            if image_base64:
+                header, encoded = image_base64.split(',', 1)
+                file_type = header.split('/')[1].split(';')[0]
+                image_data = base64.b64decode(encoded)
+                filename = f"{uuid.uuid4().hex}.{file_type}"
                 filepath = os.path.join(app.root_path+"/static/uploads/profile_image", filename)
-                profile_image.save(filepath)
+                with open(filepath, 'wb') as f:
+                    f.write(image_data)
                 old_filepath = current_user.profile_image
                 if current_user.update("profile_image",filename):
-                    if (old_filepath != "default.jpg"):
+                    if (old_filepath != "default.png"):
                         os.remove(os.path.join(app.root_path+"/static/uploads/profile_image", old_filepath))
-        elif(action=="name"):
-            first_name=request.form.get("first_name") 
-            last_name=request.form.get("last_name") 
-            for field, value in request.form.items():
-                if hasattr(current_user, field) and value and value != str(getattr(current_user, field)):
-                    current_user.update(field,value)
-        elif(action=="correo"):
+                    return jsonify({'status':'success','message': 'Imagen guardada'}),200
+                return jsonify({'status':'error','message': 'No se pudo cambiar la imagen'}),400
+            return jsonify({'status':'error','message': 'Se debe subir una imagen'}),400
+        elif(data.get("action")=="setName"):
+            first_name=data.get("first_name") 
+            last_name=data.get("last_name") 
+            if(first_name or last_name):
+                if(first_name and first_name!=current_user.first_name):
+                    if(current_user.update("first_name",first_name)):
+                        return jsonify({'status':'success','message': 'Nombre cambiado'}),200
+                    return jsonify({'status':'error','message': 'No se pudo cambiar el nombre'}),400  
+                if(last_name and last_name!=current_user.first_name):
+                    if(current_user.update("first_name",first_name)):
+                        return jsonify({'status':'success','message': 'Nombre cambiado'}),200
+                    return jsonify({'status':'error','message': 'No se pudo cambiar el apellido'}),400  
+                return jsonify({'status':'error','message': 'No se introdujo informacion nueva'}),400  
+            return jsonify({'status':'error','message': 'No se ha enviado datos'}),400                    
+        elif(data.get("action")=="correo"):
             correo=request.form.get("correo") 
             current_user.update("correo",correo)
-        elif(action=="password"):
-            old_password=request.form.get("old_password") 
-            new_password=request.form.get("new_password") 
-            new_password2=request.form.get("new_password2") 
+        elif(data.get("action")=="setPassword"):
+            old_password=data.get("old_password") 
+            new_password=data.get("password") 
+            new_password2=data.get("password2") 
             if old_password and new_password and new_password2:
-                if new_password == new_password2:
-                    if current_user.check_password(old_password):
-                        current_user.update_password(new_password)
+                if (re.search(r"^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_,.?:<>]).+$", new_password) and len(new_password)>=8):
+                    if new_password == new_password2:
+                        if current_user.check_password(old_password):
+                            current_user.update_password(new_password)
+                            return jsonify({'status':'success','message': 'Clave actualizada'}),200
+                        return jsonify({'status':'error','message': 'Clave erronea'}),400  
+                    return jsonify({'status':'error','message': 'Las claves nuevas no coinciden'}),400  
+                return jsonify({'status':'error','message': 'Clave no cumple con los parametros'}),400
+            return jsonify({'status':'error','message': 'faltan datos'}),400
     first_name=current_user.first_name
     last_name=current_user.last_name
     profile_image=current_user.profile_image
     correo=current_user.correo
     return render_template("profile-setting.html",first_name=first_name,last_name=last_name,profile_image=profile_image,correo=correo)
 
-@app.route('/post', methods=['GET'])
+@app.route('/post', methods=['GET','POST'])
 @login_required
 def post():
-    title = request.args.get("title")
-    text_color = request.args.get("text_color")
-    card_color = request.args.get("card_color")
-    first_name=current_user.first_name
-    last_name=current_user.last_name
-    profile_image=current_user.profile_image
-    return render_template("post.html",first_name=first_name,last_name=last_name,profile_image=profile_image,title=title,text_color=text_color,card_color=card_color)
+    slug_request=request.args.get("slug")
+    if(slug_request):
+        slug=Post.getBySlug(slug_request)
+        if(request.method=='POST'):
+            data=request.json
+            content=data.get("comment")
+            is_public=data.get("is_public").lower() == 'true'
+            users_id=current_user.id
+            post_id=slug.id
+            parent_comment_id=data.get("parent_comment")
+            if(Comments.add_comment(content,is_public,users_id,post_id,parent_comment_id)):
+                return jsonify({'status':'success','message': 'Comentario guardado'}),200
+            return jsonify({'status':'error','message': 'No se pudo enviar el comentario'}),400
+        info_users=Users.get_by_id(slug.users_id)
+        comments=Comments.get_comments_post(slug.id)
+        if(Post):
+            return render_template("post.html",slug=slug,info_users=info_users,comments=comments)
+    return redirect(url_for("home"))
 
 @app.route('/post/create', methods=['POST','GET'])
 @login_required
@@ -189,13 +231,12 @@ def createPost():
             return jsonify({'status': 'error', 'message': 'Faltan datos'}), 400
         if(Post.existBySlug(slug)):
             return jsonify({'status': 'error', 'message': 'Ya has ocupado este titulo en otro Post'}), 400
-        new_post=Post.createPost(title,text_color,card_color,slug,id_user)
+        new_post=Post.createPost(title,text_color,card_color,slug,"cambiar_por_status",id_user)
         if(new_post):
             soup = BeautifulSoup(editor_content, 'html.parser')
             images = soup.find_all('img')
             path=f"{app.root_path}/static/uploads/{current_user.id}/{slugify(title)}"
             if not os.path.isdir(path):
-                print(path)
                 os.makedirs(path)
             for img in images:
                 src = img.get('src')
@@ -207,15 +248,12 @@ def createPost():
                     filepath = os.path.join(path,filename)
                     with open(filepath, 'wb') as f:
                         f.write(image_data)
-                img['src'] = f'{path}/{filename}'
+                img['src'] = path=f"/static/uploads/{current_user.id}/{slugify(title)}/{filename}"
             updated_editor_content = str(soup)
             if(new_post.addContent(updated_editor_content)):
                 return jsonify({'status': 'success', 'message': 'Post creado'}), 200
         return jsonify({'status': 'error', 'message': 'Error creacion de Post'}), 400
-    first_name=current_user.first_name
-    last_name=current_user.last_name
-    profile_image=current_user.profile_image
-    return render_template("create-post.html",first_name=first_name,last_name=last_name,profile_image=profile_image)
+    return render_template("create-post.html")
 
 @app.route('/prueba')
 @login_required

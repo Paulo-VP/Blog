@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos beatae nam praesentium id assumenda possimus numquam hic molestiae. Sequi maxime dolores itaque quisquam mollitia natus repudiandae ducimus! Voluptatibus, cupiditate quibusdam.</div>
-    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos beatae nam praesentium id assumenda possimus numquam hic molestiae. Sequi maxime dolores itaque quisquam mollitia natus repudiandae ducimus! Voluptatibus, cupiditate quibusdam.</div>
-    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos beatae nam praesentium id assumenda possimus numquam hic molestiae. Sequi maxime dolores itaque quisquam mollitia natus repudiandae ducimus! Voluptatibus, cupiditate quibusdam.</div>
-    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos beatae nam praesentium id assumenda possimus numquam hic molestiae. Sequi maxime dolores itaque quisquam mollitia natus repudiandae ducimus! Voluptatibus, cupiditate quibusdam.</div>
-    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos beatae nam praesentium id assumenda possimus numquam hic molestiae. Sequi maxime dolores itaque quisquam mollitia natus repudiandae ducimus! Voluptatibus, cupiditate quibusdam.</div>
-    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos beatae nam praesentium id assumenda possimus numquam hic molestiae. Sequi maxime dolores itaque quisquam mollitia natus repudiandae ducimus! Voluptatibus, cupiditate quibusdam.</div>
+    <div class="container mt-4">
+        {% for post_info in posts_info %}
+            {% include "base_card.html" %}
+        {% endfor %}
+    </div>
 {% endblock %}
 
