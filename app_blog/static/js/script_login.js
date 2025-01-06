@@ -45,6 +45,7 @@ document.getElementById('createAccountSection').addEventListener('submit', async
         body: JSON.stringify(data)
     });
     const result = await response.json();
+    console.log(result)
 });
 
 document.getElementById('forgotPasswordSection').addEventListener('submit', async (event) => {
@@ -59,4 +60,5 @@ document.getElementById('forgotPasswordSection').addEventListener('submit', asyn
         body: JSON.stringify(data)
     });
     const result = await response.json();
+    console.log(result)
 });

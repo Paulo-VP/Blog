@@ -11,7 +11,6 @@ document.getElementById('createForm').addEventListener('submit', async (event) =
         body: JSON.stringify(data)
     });
     const result = await response.json();
-    console.log(result);
     if (response.status === 400) {
         alert(result.message);
     } else {
